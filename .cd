@@ -18,9 +18,13 @@ function build() {
 function release() {
   if [ ! -d "dist" ]; then; mkdir dist; fi
   npm run release
-  cd dist 
-  git add . 
-  git commit -m "releasing" 
-  git push origin gh-pages --force
-  cd ..
+	(
+		cd dist 
+		git init
+		git add . 
+		git commit -m "releasing" 
+		git checkout -b gh-pages
+		git remote add release git@github.com:LeonKuhne/nodel.git
+		git push release gh-pages --force
+	)
 }

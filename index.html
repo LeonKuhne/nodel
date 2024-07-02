@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Nodel Example</title>
+    <link rel='stylesheet' href='styles.css'>
+    <style>
+      html, body, #nodel {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+      .basic {
+        border-style: solid;
+        padding: 10px;
+        background: lightblue;
+        user-select: none;
+      }
+      /* the group class is added automatically for collapsed group nodes */
+      .basic + .group {
+        border-style: double;
+      }
+      .line-default {
+        stroke:rgb(255,0,0);stroke-width:2
+      }
+      .line-label {
+        background: #fffa;
+      }
+    </style>
+    <script type="module">
+      import Nodel from './nodel.min.mjs'
+      window.onload = () => {
+        const render = new Nodel.Renderer()
+        const manage = new Nodel.Manager(render)
+        const listen = new Nodel.Listener(render, manage)
+        
+        // create some nodes
+        let nodeAId = manage.addNode('basic', -100, 50, {name: 'A'})
+        let nodeBId = manage.addNode('basic', 100, -50, {name: 'B'})
+        let nodeCId = manage.addNode('basic', 150, 150, {name: 'C'})
+
+        // connect the nodes
+        manage.toggleConnect(nodeAId, nodeBId)
+        manage.toggleConnect(nodeBId, nodeCId)
+
+        // make a group and collapse it
+        manage.toggleGroup(nodeBId, true)
+
+        // click to toggle view
+        listen.on('click', e => {
+          if (e.node) {
+            manage.toggleGroup(e.node.id)
+          }
+        })
+
+        // move to drag and decorate the cursor
+        let draggingId = null
+        listen.on('mousedown', e => {
+          if (e.node) {
+            e.elem.classList.add('dragging')
+            draggingId = e.node.id
+          }
+        })
+        listen.on('mousemove', e => {
+          console.log("dragging id", draggingId)
+          if (draggingId) {
+            manage.moveNode(draggingId, e.x, e.y)
+            document.getElementById(draggingId)
+              .classList.add('dragging')
+          }
+        })
+        listen.on('mouseup', e => {
+          document.getElementById(draggingId)
+            .classList.remove('dragging')
+          draggingId = null
+        })
+
+        // setup connection colors
+        render.on('connection-color', connectionType => ({
+          'default': '#ad00d9',
+          'alternate': '#006700',
+        }[connectionType]))
+        render.on('connection-label', (source, target, type) => {
+          return `${source.data.name} to ${target.data.name}`
+        })
+
+        // listen for connection clicks
+        listen.on('click', (e) => {
+          const [source, target] = e.nodes
+          let connectionType = manage.getConnectionType(source.id, target.id)
+
+          // toggle and update the connection type
+          connectionType = connectionType === 'default' ? 'alternate' : 'default'
+          manage.setConnectionType(source.id, target.id, connectionType)
+        }, true)
+      }
+    </script>
+  </head>
+  <body>
+    <!-- NODE VIEW -->
+    <div id='nodel'>
+
+      <!-- TEMPLATES -->
+      <div id='basic' class='basic'>I'm {name}</div>
+
+    </div>
+  </body>
+</html>

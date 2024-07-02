@@ -1,0 +1,22 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+} #nodel * {
+  max-width: fit-content;
+  max-height: fit-content;
+} #lines {
+  width: 100%;
+  height: 100%;
+  display: block;
+} .line-label {
+  z-index: 1;
+} .connection {
+  cursor: pointer;
+  pointer-events: all !important;
+  user-select: none;
+} .basic {
+  cursor: grab;
+} .dragging {
+  cursor: grabbing;
+}

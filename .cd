@@ -3,12 +3,7 @@ title "nodel"
 help .cd | indent
 
 function run() {
-  if [ ! -d "dist" ]; then; mkdir dist; fi
-  build
-  $(
-    cd dist
-		python3 -m http.server
-  )
+	npm run dev
 }
 
 function build() {

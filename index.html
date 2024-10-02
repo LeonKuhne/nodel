@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <title>Nodel Example</title>
     <link rel='stylesheet' href='styles.css'>
     <style>
@@ -28,7 +29,7 @@
       }
     </style>
     <script type="module">
-      import Nodel from './nodel.min.mjs'
+      import Nodel from './src/index.mjs'
       window.onload = () => {
         const render = new Nodel.Renderer()
         const manage = new Nodel.Manager(render)

@@ -1,6 +1,6 @@
 import { findTemplates } from './util.mjs'
 import { toRegPos } from './util.mjs'
-import LeaderLine from 'leader-line'
+import LinkerLine from 'linkerline'
 
 export class NodelRender {
   constructor() {
@@ -124,7 +124,7 @@ export class NodelRender {
             const binding = this.connectionBinding
             if (binding.eventType && binding.callback) {
               const arrowElem = Array.from(document
-                .querySelector(`path#leader-line-${connection._id}-line-path`)
+                .querySelector(`path#linker-line-${connection._id}-line-path`)
                 .closest('svg.leader-line')
                 .querySelectorAll('text'))
                 .find(elem => elem.textContent === connection.middleLabel)
@@ -147,7 +147,9 @@ export class NodelRender {
     const lineColor = this.helpers['connection-color'](type)
     const lineLabel = this.helpers['connection-label'](fromNode, toNode, type)
     // draw a line to the child
-    const line = new LeaderLine(fromElem, toElem, {
+    const line = new LinkerLine({
+      start: fromElem, 
+      end: toElem,
       middleLabel: lineLabel,
       dash: dashed,
       color: lineColor,
